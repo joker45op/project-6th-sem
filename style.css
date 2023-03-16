@@ -1,56 +1,109 @@
-* {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+:root {
+  --button-color: #1E212D;
+  --button-text-color:#d8b0a5;
+  --background-color: #FAF3E0;
+  --text-color:#916d5b;
 }
 
-html,
-body {
-    width: 100vw;
-    min-height: 100vh;
-    /* overflow-y: auto; */
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html::-webkit-scrollbar {
-    display: none;
+body,html {
+  font-family: 'Balsamiq Sans', cursive;
+  margin: 0;
+  padding: 0;
+  max-width: 100vw;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
-#home {
-    border: 2px solid red;
-    height: 100vh;
-    /* width: 100vw; */
+.navbar{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  border: 1px solid;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 800;
+  font-size: 40px;
+  padding: 5px 100px;
+  width: 100%;
+  z-index: 99;
 }
 
-nav {
-    border: 1px solid blue;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.6rem;
-    background-color: black;
-    color: white;
-    /* background: linear-gradient(black, transparent); */
+.navbar > div {
+  display: flex;
+  align-items: flex-end;
+  gap: 50px;
 }
 
-#menu {
-    display: flex;
-    width: 35vw;
-    justify-content: space-evenly;
+.nav > span{
+  padding: 8px 22px;
+  border-radius:20px ;
+  font-size: 18px;
+  color: var(--button-text-color);
+  background-color: var(--button-color);
 }
 
-#menu a {
-    text-decoration: none;
-    color: white;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+.nav span:hover{
+  background-color: white;
+  opacity: 0;
 }
 
-#bg {
-    width: 100%;
+#app{
+  width: 100%;
+  position: absolute;
+  top:0;
+  left:0;
 }
 
-#aboutUs {
-    border: 2px solid blue;
-    width: 100%;
-    height: 100vh;
+canvas{
+  border: 1px solid;
+  width: 100%;
+}
+
+.aboutus{
+  position: relative;
+  top:0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+
+}
+
+.parts{
+  display: flex;
+  padding: 10px 60px;
+  gap: 50px;
+}
+
+.parts > div{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.parts:nth-child(2){
+  flex-direction: row-reverse;
+}
+
+.parts p{
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.parts:nth-child(3) p{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
