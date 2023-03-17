@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TFGP Blog</title>
 </head>
+
 <body id="body">
-    <textarea id="editor"></textarea>
-    <button type="submit" onclick="getData()">submit</button>
-    <script>
-        function getData() {
-            const editorData = CKEDITOR.instances.editor.getData();
-            console.log(editorData);
-        }
-    </script>
-    <script type="module" src="blog.js"></script>
-</body>
+    <div id="editor"></div>
+    <button type="submit" id="submit">submit</button>
+    <script type="module" src="/blog.js"></script>
+  </body>
 </html>
