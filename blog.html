@@ -2,15 +2,31 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TFGP Blog</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TFGP Blog</title>
+  <link rel="stylesheet" href="blog.css">
+  <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 </head>
 
 <body id="body">
-    <div id="editor"></div>
-    <button type="submit" id="submit">submit</button>
-    <script type="module" src="/blog.js"></script>
-  </body>
+  <div id="editor"></div>
+  <button type="submit" id="submit">submit</button>
+
+  <script>
+    ClassicEditor
+      .create(document.querySelector('#editor'), {
+        removePlugins:['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed']
+        
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  </script>
+
+
+  <!-- <script type="module" src="/blog.js"></script> -->
+</body>
+
 </html>

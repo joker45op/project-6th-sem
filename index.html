@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap"
-      rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <nav class="navbar">
-      <div><span class="logo">TFGP</span></div>
-      <div class="nav">
-        <a href="#">About Us</a>
-        <a href="/blog.html">Blogs</a>
-        <a href="#">Contact Us</a>
-      </div>
-    </nav>
-    <div id="app">
-      <canvas>
 
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div><span class="logo">TFGP</span></div>
+    <div class="nav">
+      <a href="#aboutus">About Us</a>
+      <a href="/blog.html">Blogs</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </nav>
+  <div id="app">
+    <div>
+      <div id="can">
+        <button id="strt" onclick="removeElement('can')">Start</button>
+      </div>
+      <canvas id="bg">
       </canvas>
+    </div>
+    <div id="aboutus">
+      <span>About Us</span>
       <div class="aboutus">
         <div class="parts">
           <div><span>Introduction</span>
@@ -32,7 +38,7 @@
               meets practicality to shape the future of technology.
             </p>
           </div>
-          <div></div>
+          <div><img src="/img (1).png" alt="" srcset=""></div>
         </div>
         <div class="parts">
           <div><span>VISION</span>
@@ -43,7 +49,9 @@
               society.
             </p>
           </div>
-          <div></div>
+          <div>
+            <div><img src="/img (3).png" alt="" srcset=""></div>
+          </div>
         </div>
         <div class="parts">
           <div><span>MISSION</span>
@@ -63,10 +71,22 @@
               </span>
             </p>
           </div>
-          <div></div>
+          <div>
+            <div><img src="/img (2).png" alt="" srcset=""></div>
+          </div>
         </div>
       </div>
     </div>
-    <script type="module" src="/main.js"></script>
-  </body>
+  </div>
+  <script>
+    function removeElement(elementId) {
+      var element = document.getElementById(elementId);
+      if (element) {
+        element.remove();
+      }
+    }
+  </script>
+  <script type="module" src="/main.js"></script>
+</body>
+
 </html>

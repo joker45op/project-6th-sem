@@ -1,0 +1,6 @@
+:root{
+    --ck-color-base-border:#555;
+}
+#editor{
+    border: 1px solid;
+}

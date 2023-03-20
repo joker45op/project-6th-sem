@@ -15,7 +15,15 @@ const editor = new EditorJS({
     tools: {
         header: Header,
         list: List,
-        image: ImageTool,
+        image: {
+            class: ImageTool,
+            config: {
+              endpoints: {
+                byFile: 'http://localhost:3001/uploadFile', // Your backend file uploader endpoint
+                byUrl: 'http://localhost:3008/fetchUrl', // Your endpoint that provides uploading by Url
+              }
+            }
+          },
         attaches: AttachesTool,
         underline: Underline,
         quote: Quote,
