@@ -21,9 +21,9 @@
     </div>
   </nav>
   <div id="app">
-    <div>
+    <div id="contain">
       <div id="can">
-        <button id="strt" onclick="removeElement('can')">Start</button>
+        <button id="strt" onclick="removeElements('can','aboutus')">Start</button>
       </div>
       <canvas id="bg">
       </canvas>
@@ -79,12 +79,56 @@
     </div>
   </div>
   <script>
-    function removeElement(elementId) {
-      var element = document.getElementById(elementId);
-      if (element) {
-        element.remove();
+    let crosss;
+    let ee1, ee2;
+    let state = false
+    function removeElements(e1, e2) {
+      var e1 = document.getElementById(e1);
+      if (e1) {
+        ee1 = e1
+        e1.remove();
       }
+      var e2 = document.getElementById(e2);
+      if (e2) {
+        ee2 = e2
+        e2.remove();
+      }
+      const cross = document.createElement('span');
+      cross.style.display = 'inline-block';
+      cross.style.backgroundColor = 'white';
+      cross.style.borderRadius = '50%';
+      cross.style.width = '50px';
+      cross.style.height = '50px';
+      cross.style.transition = '2s';
+      cross.innerHTML = '<img src="cross.png">';
+      cross.id = 'cross'
+      document.querySelector('.nav').innerHTML = ""
+      document.querySelector('.nav').appendChild(cross)
+      crosss = document.querySelector('#cross');
+      console.log(crosss)
+      state = true
     }
+
+    setInterval(() => {
+      if (crosss !== undefined) {
+        crosss = document.querySelector('#cross');
+        crosss.addEventListener('click', function () {
+          if (state == true) {
+            document.querySelector('.nav').innerHTML = ""
+            document.querySelector('.nav').innerHTML = `<a href="#aboutus">About Us</a>
+          <a href="/blog.html">Blogs</a>
+          <a href="#">Contact Us</a>`
+            let data = document.createElement('div')
+            data.id = 'can'
+            data.innerHTML = `<button id="strt" onclick="removeElements('can','aboutus')">Start</button>`
+            let cont = document.querySelector('#contain')
+            cont.insertBefore(data, cont.firstChild)
+            state = false
+          }
+        });
+      }
+    }, 100);
+
   </script>
   <script type="module" src="/main.js"></script>
 </body>
