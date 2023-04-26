@@ -18,6 +18,7 @@
       <a href="#aboutus">About Us</a>
       <a href="/blog.html">Blogs</a>
       <a href="#">Contact Us</a>
+      <a href="/adminLogin.html">Login</a>
     </div>
   </nav>
   <div id="app">
@@ -33,20 +34,13 @@
       <div class="aboutus">
         <div class="parts">
           <div><span>Introduction</span>
-            <p>
-              Welcom to TFGP's Computer Engineering Department, where innovation
-              meets practicality to shape the future of technology.
-            </p>
+            <p id="welcome"></p>
           </div>
           <div><img src="/img (1).png" alt="" srcset=""></div>
         </div>
         <div class="parts">
           <div><span>VISION</span>
-            <p>
-              To become a recognized leader in Gujarat by producing Technically
-              Skilled, Creative, Independent and Socially Inclined Diploma
-              Computer Engineers contributing towards the ever changing needs of
-              society.
+            <p id="vision">
             </p>
           </div>
           <div>
@@ -55,19 +49,10 @@
         </div>
         <div class="parts">
           <div><span>MISSION</span>
-            <p>
-              <span>
-                1. To provide quality undergraduate education in both the theory
-                and applied computer science and train the students to implement
-                this knowledge to solve the problems of real world.
-              </span>
-              <span>
-                2. To develop positive attitude towards lifelong learning
-                according to the demands of versatile society.
-              </span>
-              <span>
-                3. To support other academic and socially interactive programs
-                conducted by the institute.
+            <p id="mission">
+              <span id="mission1"></span>
+              <span id="mission2"></span>
+              <span id="mission3">
               </span>
             </p>
           </div>
@@ -86,14 +71,15 @@
       var e1 = document.getElementById(e1);
       if (e1) {
         ee1 = e1
-        e1.remove();
+        e1.style.display = "none";
       }
       var e2 = document.getElementById(e2);
       if (e2) {
         ee2 = e2
-        e2.remove();
+        e2.style.display = "none";
       }
-      const cross = document.createElement('span');
+      state = true
+      const cross = document.createElement('button');
       cross.style.display = 'inline-block';
       cross.style.backgroundColor = 'white';
       cross.style.borderRadius = '50%';
@@ -104,30 +90,22 @@
       cross.id = 'cross'
       document.querySelector('.nav').innerHTML = ""
       document.querySelector('.nav').appendChild(cross)
-      crosss = document.querySelector('#cross');
-      console.log(crosss)
-      state = true
-    }
-
-    setInterval(() => {
-      if (crosss !== undefined) {
+      // cross.addEventListener('click', function () {
+      cross.onclick = function () {
         crosss = document.querySelector('#cross');
-        crosss.addEventListener('click', function () {
-          if (state == true) {
-            document.querySelector('.nav').innerHTML = ""
-            document.querySelector('.nav').innerHTML = `<a href="#aboutus">About Us</a>
+        if (state == true) {
+          document.querySelector('.nav').innerHTML = ""
+          document.querySelector('.nav').innerHTML = `<a href="#aboutus">About Us</a>
           <a href="/blog.html">Blogs</a>
-          <a href="#">Contact Us</a>`
-            let data = document.createElement('div')
-            data.id = 'can'
-            data.innerHTML = `<button id="strt" onclick="removeElements('can','aboutus')">Start</button>`
-            let cont = document.querySelector('#contain')
-            cont.insertBefore(data, cont.firstChild)
-            state = false
-          }
-        });
+          <a href="#">Contact Us</a>
+          <a href="/adminLogin.html">Login</a>`
+          alert()
+          e1.style.display = "flex"
+          e2.style.display = "flex"
+          state = false
+        }
       }
-    }, 100);
+    }
 
   </script>
   <script type="module" src="/main.js"></script>
