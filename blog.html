@@ -11,22 +11,28 @@
 </head>
 
 <body id="body">
+  <div>
+    <h1>Add New Blog</h1>
+  </div>
+  <div id="title">
+    <span>Title</span>
+    <input type="text" name="" id="">
+  </div>
   <div id="editor"></div>
-  <button type="submit" id="submit">submit</button>
-
+  <div id="sub">
+    <button type="submit" id="submit">Submit</button>
+  </div>
   <script>
     ClassicEditor
       .create(document.querySelector('#editor'), {
-        removePlugins:['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed']
-        
+        removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed']
+
       })
       .catch(error => {
         console.error(error);
       });
   </script>
-
-
-  <!-- <script type="module" src="/blog.js"></script> -->
+  <script type="module" src="/blog.js"></script>
 </body>
 
 </html>

@@ -3,4 +3,37 @@
 }
 #editor{
     border: 1px solid;
+    width: 100%;
+}
+.ck-editor{
+    width: 100%;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    justify-content: center;
+    align-items: center;
+    font-family: Helvetica;
+}
+input{
+    border:1px solid rgb(204 206 209);
+    font-size: 1.6rem;
+}
+
+#title{
+    font-size: 1.6rem;
+}
+#sub{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#submit{
+    font-size: 1rem;
+    border-radius: 0;
+    border:1px solid rgb(204 206 209);
+    background-color: transparent;
+    padding: 7px 15px;
+    align-self: flex-end;
 }
