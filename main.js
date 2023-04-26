@@ -141,7 +141,7 @@ function animate() {
         camera2.lookAt(pp[0], 0.5, pp[1])
         camera2.position.set(charPos.x, charPos.y, charPos.z)
     }
-    renderer.render(scene, camera)
+    renderer.render(scene, camera2)
 }
 animate()
 
