@@ -193,17 +193,19 @@ canvas{
 
 #viewerAsk{
   width: 100%;
-  height: min-content;
+  min-height: min-content;
   display: flex;
   justify-content: center;
   gap: 30px;
   align-items: center;
   position: absolute;
   z-index: 9999999;
-  /* bottom: 0px; */
+  bottom: 1px;
+  border:1px solid red;
 }
 
 #viewerMain{
+  transition: 1s;
   /* aspect-ratio: 1/1; */
   width:300px;
   height: min-content;

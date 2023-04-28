@@ -8,6 +8,11 @@ import { GridHelper, PointLightHelper } from 'three'
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls'
 import { AmbientLight } from 'three'
 
+//gameState
+localStorage.setItem("viwerState", false);
+localStorage.setItem("inGameState", false);
+localStorage.setItem("viwerIntersect", false)
+
 // scene
 const scene = new THREE.Scene()
 scene.background = new THREE.Color(0x00f5ff)
@@ -68,7 +73,7 @@ loader.load('/character/scene.gltf',
         character.position.y = 0.005
         character.scale.set(0.1, 0.1, 0.1)
         scene.add(character)
-        helper = new THREE.Box3(new THREE.Vector3(),new THREE.Vector3());
+        helper = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
         helper.setFromObject(character);
         console.log(helper);
     },
@@ -148,7 +153,7 @@ function animate() {
         // character.rotation.y+=1.6
         camera2.lookAt(pp[0], 0.5, pp[1])
         camera2.position.set(charPos.x, charPos.y, charPos.z)
-    
+
         //helper
         // helper.copy(c.geometry.boundingBox).applyMatrix4(character.matrixWorld)
         helper.setFromObject(character);
@@ -164,28 +169,73 @@ let viewersBB = []
 // viewer stand
 let viewer = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.MeshBasicMaterial({ color: 'red' }));
 scene.add(viewer);
-viewer.position.set(1,0,1)
-let viewerBB = new THREE.Box3(new THREE.Vector3(),new THREE.Vector3());
+viewer.position.set(1, 0, 1)
+let viewerBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 viewerBB.setFromObject(viewer);
 viewers.push(viewer)
 viewersBB.push(viewerBB)
 
 let viewer2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.MeshBasicMaterial({ color: 'red' }));
 scene.add(viewer2);
-viewer2.position.set(-1,0,-1)
-let viewer2BB = new THREE.Box3(new THREE.Vector3(),new THREE.Vector3());
+viewer2.position.set(-1, 0, -1)
+let viewer2BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 viewer2BB.setFromObject(viewer2);
 viewers.push(viewer2)
 viewersBB.push(viewer2BB)
 
-function detectCollision(){
-    viewersBB.map((obj)=>{
-    if (helper.intersectsBox(obj)){
+
+// ADDING VIVWER ON COLID FUNCTION
+let aViwer = false
+let rViwer = false
+
+function addViwer(img) {
+    if (localStorage.getItem("viwerState") === "false") {
         let a = document.querySelector("#viewerAsk")
-        document.querySelector("#viewerAsk").remove()
-        document.querySelector("#can").appendChild(a)
+        if (document.querySelector('.pnlm-render-container')) {
+            document.querySelector('.pnlm-render-container').remove()
+        }
+        document.querySelector("#contain").appendChild(a)
+
+        pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            "panorama": "./views/"+img,
+            "autoLoad": true,
+            "autoRotate": -8
+        });
+        let tmp = document.querySelectorAll(".pnlm-about-msg")
+        console.log(tmp);
+
+        tmp.forEach(element => {
+            element.remove()
+        });
+
+        localStorage.setItem("viwerState", "true")
+        a.style.display = "flex"
+        a.style.height = "min-content"
     }
-})
+}
+
+function removeViwer() {
+    if (localStorage.getItem("viwerState") === "true") {
+        let a = document.querySelector("#viewerAsk")
+
+        a.style.display = "none"
+        a.style.height = "min-content"
+        localStorage.setItem("viwerState", false)
+        console.log("remove");
+    }
+
+}
+
+
+function detectCollision() {
+    if (helper.intersectsBox(viewersBB[0])) {
+        addViwer("PANO_20230224_142911.jpg")
+    }
+    else {
+        removeViwer()
+    }
+
 }
 
 document.body.onload = function () {

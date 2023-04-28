@@ -4,7 +4,6 @@ var bodyParser = require('body-parser')
 
 var states = {
     login: false,
-    inGame: false
 }
 
 var mysql = require('mysql')
