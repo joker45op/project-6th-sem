@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "1234",
+    password: "123",
     database: 'project6'
 })
 con.connect((err) => {

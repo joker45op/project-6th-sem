@@ -62,7 +62,16 @@
         </div>
       </div>
     </div>
+    <div id="viewerAsk">
+      <div id="viewerMain">
+        <div id="panorama"></div>
+      </div>
+      <div>
+        <button onclick="makeView()">View</button>
+      </div>
+    </div>
   </div>
+
   <script>
     let crosss;
     let ee1, ee2;
@@ -109,6 +118,20 @@
 
   </script>
   <script type="module" src="/main.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+  <script>
+    pannellum.viewer('panorama', {
+      "type": "equirectangular",
+      "panorama": "./views/PANO_20230224_142911.jpg",
+      "autoLoad": true,
+      "autoRotate": -8
+    });
+
+    document.querySelector(".pnlm-about-msg").hidden = true
+    function makeView() {
+      alert()
+    }
+  </script>
 </body>
 
 </html>

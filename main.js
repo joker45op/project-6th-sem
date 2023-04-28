@@ -55,8 +55,12 @@ const c2Helper = new THREE.CameraHelper(camera2)
 // scene.add(c2Helper)
 
 
+
+
+
 // character
 let character
+let helper
 const loader = new GLTFLoader()
 loader.load('/character/scene.gltf',
     (obj) => {
@@ -64,6 +68,9 @@ loader.load('/character/scene.gltf',
         character.position.y = 0.005
         character.scale.set(0.1, 0.1, 0.1)
         scene.add(character)
+        helper = new THREE.Box3(new THREE.Vector3(),new THREE.Vector3());
+        helper.setFromObject(character);
+        console.log(helper);
     },
     (xhr) => {
         console.log(xhr)
@@ -127,6 +134,7 @@ function createLine(x1, y1, x2, y2) {
 let charPos = new THREE.Vector3()
 let target
 
+
 function animate() {
     requestAnimationFrame(animate)
     if (character !== undefined) {
@@ -140,10 +148,45 @@ function animate() {
         // character.rotation.y+=1.6
         camera2.lookAt(pp[0], 0.5, pp[1])
         camera2.position.set(charPos.x, charPos.y, charPos.z)
+    
+        //helper
+        // helper.copy(c.geometry.boundingBox).applyMatrix4(character.matrixWorld)
+        helper.setFromObject(character);
+        detectCollision()
     }
-    renderer.render(scene, camera2)
+    renderer.render(scene, camera)
 }
 animate()
+
+
+let viewers = []
+let viewersBB = []
+// viewer stand
+let viewer = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.MeshBasicMaterial({ color: 'red' }));
+scene.add(viewer);
+viewer.position.set(1,0,1)
+let viewerBB = new THREE.Box3(new THREE.Vector3(),new THREE.Vector3());
+viewerBB.setFromObject(viewer);
+viewers.push(viewer)
+viewersBB.push(viewerBB)
+
+let viewer2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.MeshBasicMaterial({ color: 'red' }));
+scene.add(viewer2);
+viewer2.position.set(-1,0,-1)
+let viewer2BB = new THREE.Box3(new THREE.Vector3(),new THREE.Vector3());
+viewer2BB.setFromObject(viewer2);
+viewers.push(viewer2)
+viewersBB.push(viewer2BB)
+
+function detectCollision(){
+    viewersBB.map((obj)=>{
+    if (helper.intersectsBox(obj)){
+        let a = document.querySelector("#viewerAsk")
+        document.querySelector("#viewerAsk").remove()
+        document.querySelector("#can").appendChild(a)
+    }
+})
+}
 
 document.body.onload = function () {
     async function getData() {

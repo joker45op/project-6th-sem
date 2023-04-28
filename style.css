@@ -190,3 +190,40 @@ canvas{
   width: 60px;
   height: 60px;
 }
+
+#viewerAsk{
+  width: 100%;
+  height: min-content;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  align-items: center;
+  position: absolute;
+  z-index: 9999999;
+  /* bottom: 0px; */
+}
+
+#viewerMain{
+  /* aspect-ratio: 1/1; */
+  width:300px;
+  height: min-content;
+  overflow: hidden;
+}
+
+#panorama canvas {
+border-radius: 10px;
+}
+
+#viewerAsk button{
+  padding: 10px 20px;
+  color: aliceblue;
+  background-color: transparent;
+  border: 1px solid white;
+  border-radius: 5px;
+  font-weight: 700;
+}
+
+#viewerAsk button:hover{
+  background-color: white;
+  color: #1e2125;
+}
