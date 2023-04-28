@@ -36,19 +36,35 @@
 //     },
 // })
 
+import axios from 'axios'
+
 let sub = document.querySelector('#submit')
-sub.addEventListener('click',function(){
-  let text = document.getElementsByClassName("ck-editor__editable")[0]
-  alert(text.innerHTML.toString())
+sub.addEventListener('click', async function () {
+  let headTxt = document.querySelector("#headtxt").value
+  let blogTxt = document.getElementsByClassName("ck-editor__editable")[0].innerHTML.toString()
+  
+  async function d(){
+    console.log([headTxt,blogTxt]);
+    let da = await JSON.stringify({
+      heading: headTxt,
+      blog: blogTxt
+    })
+    return da
+  }
+  
+  let data = d()
+  axios.post('http://localhost:3001/blog',{
+    heading: headTxt,
+    blog: blogTxt
+  })
+    .then((response) => {
+      console.log(response);
+    }, (error) => {
+      console.log(error);
+    });
 })
 
 document.getElementsByClassName('ck')[0].style.width = "100%"
+document.body.onload = function () {
 
-
-async function fetchBlogs(){
-  await fetch("http://localhost:300/blog")
-}
-
-document.body.onload=function(){
-  
 }

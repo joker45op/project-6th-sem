@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "123",
+    password: "1234",
     database: 'project6'
 })
 con.connect((err) => {
@@ -50,8 +50,18 @@ app.post('/adminLogin', (req, res) => {
 })
 
 app.post('/blog',(req,res)=>{
-    console.log(req.body);
-    res.send()
+    let data = req.body
+    let query = "insert into blogs(heading,blogg) values('"+data.heading+"','"+data.blog+"');"
+    console.log(query);
+    con.query(query, (err, result) => {
+        if (err) {
+            res.status(500).send()
+            throw err
+        }
+        else {
+            res.json(result)
+        }
+    })
 })
 
 app.listen(3001, () => {
