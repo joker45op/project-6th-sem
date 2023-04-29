@@ -33,6 +33,7 @@ const planeGeometry = new THREE.BoxGeometry(30, 0.01, 30)
 const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xbb9a59 })
 const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 scene.add(plane)
+plane.position.y = -0.25
 
 // point light
 const plight = new PointLight(0xffffff)
@@ -52,7 +53,7 @@ c.position.set(0.2, 0.38, 0.2);
 pivot.add(c);
 // pivot.rotation.y += 0.01;
 scene.add(pivot)
-// pivot.visible = false
+pivot.visible = false
 
 //sceond camera
 const camera2 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100)
@@ -60,7 +61,7 @@ const c2Helper = new THREE.CameraHelper(camera2)
 // scene.add(c2Helper)
 
 
-
+const controls = new OrbitControls(camera, renderer.domElement)
 
 
 // character
@@ -87,22 +88,24 @@ loader.load('/character/scene.gltf',
 scene.updateMatrixWorld(true)
 
 // building
-// let building
-// const loader2 = new GLTFLoader()
-// loader2.load('/character/starting344.gltf',
-//     (obj) => {
-//         building = obj.scene
-//         building.position.y = 0.005
-//         building.scale.set(0.1, 0.1, 0.1)
-//         scene.add(building)
-//     },
-//     (xhr) => {
-//         console.log(xhr)
-//     },
-//     (err) => {
-//         console.log(err)
-//     }
-// )
+let building
+const loader2 = new GLTFLoader()
+loader2.load('/character/starting1.gltf',
+    (obj) => {
+        building = obj.scene
+        // building.position.y = 0.005
+        building.position.y = -0.255
+        building.position.z = -9
+        building.scale.set(0.22, 0.22, 0.22)
+        scene.add(building)
+    },
+    (xhr) => {
+        console.log(xhr)
+    },
+    (err) => {
+        console.log(err)
+    }
+)
 
 
 window.addEventListener('keypress', (e) => {
@@ -111,10 +114,10 @@ window.addEventListener('keypress', (e) => {
         character.position.set(w.x, w.y, w.z)
     }
     if (e.key === 'a' || e.key === 'A') {
-        pivot.rotation.y -= 0.05;
+        pivot.rotation.y += 0.05;
     }
     if (e.key === 'd' || e.key === 'D') {
-        pivot.rotation.y += 0.05;
+        pivot.rotation.y -= 0.05;
     }
     if (e.key === 's' || e.key === 'S') {
         // pivot.position.z += 0.05
@@ -159,7 +162,7 @@ function animate() {
         helper.setFromObject(character);
         detectCollision()
     }
-    renderer.render(scene, camera)
+    renderer.render(scene, camera2)
 }
 animate()
 

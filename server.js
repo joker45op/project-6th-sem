@@ -2,7 +2,7 @@ var express = require('express')
 var cors = require('cors')
 var bodyParser = require('body-parser')
 
-var states = {
+var state = {
     login: false,
 }
 
@@ -39,13 +39,28 @@ app.get('/', (req, res) => {
 })
 
 app.post('/adminLogin', (req, res) => {
-    if (req.body.username === "admin" && req.body.password === "admin123") {
+    if (req.body.username === "admin" && req.body.password === "admin") {
         state.login = true
         res.status(200).send("okay")
     }
     else {
         res.status(500).send("wrong")
     }
+})
+
+app.get('/blog',(req,res)=>{
+    let query = "select * from blogs;"
+    console.log(query);
+    con.query(query, (err, result) => {
+        if (err) {
+            res.status(500).send()
+            throw err
+        }
+        else {
+            console.log(result);
+            res.json(result)
+        }
+    })
 })
 
 app.post('/blog',(req,res)=>{

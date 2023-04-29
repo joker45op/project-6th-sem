@@ -42,18 +42,18 @@ let sub = document.querySelector('#submit')
 sub.addEventListener('click', async function () {
   let headTxt = document.querySelector("#headtxt").value
   let blogTxt = document.getElementsByClassName("ck-editor__editable")[0].innerHTML.toString()
-  
-  async function d(){
-    console.log([headTxt,blogTxt]);
+
+  async function d() {
+    console.log([headTxt, blogTxt]);
     let da = await JSON.stringify({
       heading: headTxt,
       blog: blogTxt
     })
     return da
   }
-  
+
   let data = d()
-  axios.post('http://localhost:3001/blog',{
+  axios.post('http://localhost:3001/blog', {
     heading: headTxt,
     blog: blogTxt
   })
@@ -66,5 +66,12 @@ sub.addEventListener('click', async function () {
 
 document.getElementsByClassName('ck')[0].style.width = "100%"
 document.body.onload = function () {
-
+  axios.get('http://localhost:3001/blog')
+    .then((response) => {
+      response.data.forEach(ele => {
+        console.log(ele);
+      });
+    }, (error) => {
+      console.log(error);
+    });
 }
