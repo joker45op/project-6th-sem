@@ -7,11 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { GridHelper, PointLightHelper } from 'three'
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls'
 import { AmbientLight } from 'three'
-
-//gameState
-localStorage.setItem("viwerState", false);
-localStorage.setItem("inGameState", false);
-localStorage.setItem("viwerIntersect", false)
+import { threeToCannon, ShapeType } from 'three-to-cannon';
 
 // scene
 const scene = new THREE.Scene()
@@ -33,7 +29,6 @@ const planeGeometry = new THREE.BoxGeometry(30, 0.01, 30)
 const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xbb9a59 })
 const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 scene.add(plane)
-plane.position.y = -0.25
 
 // point light
 const plight = new PointLight(0xffffff)
@@ -61,28 +56,31 @@ const c2Helper = new THREE.CameraHelper(camera2)
 // scene.add(c2Helper)
 
 
-const controls = new OrbitControls(camera, renderer.domElement)
-
+var clock = new THREE.Clock();
 
 // character
 let character
-let helper
+let mixer
+let action
+let walking
 const loader = new GLTFLoader()
-loader.load('/character/scene.gltf',
+loader.load('/character/test2.gltf',
     (obj) => {
         character = obj.scene
         character.position.y = 0.005
         character.scale.set(0.1, 0.1, 0.1)
+        console.log(obj.animations);
+        mixer = new THREE.AnimationMixer(obj.scene);
+        action = mixer.clipAction(obj.animations[0]);
+        walking = mixer.clipAction(obj.animations[1])
+
         scene.add(character)
-        helper = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-        helper.setFromObject(character);
-        console.log(helper);
     },
     (xhr) => {
-        console.log(xhr)
+        // console.log(xhr)
     },
     (err) => {
-        console.log(err)
+        // console.log(err)
     }
 )
 scene.updateMatrixWorld(true)
@@ -90,20 +88,18 @@ scene.updateMatrixWorld(true)
 // building
 let building
 const loader2 = new GLTFLoader()
-loader2.load('/character/starting1.gltf',
+loader2.load('/character/starting344.gltf',
     (obj) => {
         building = obj.scene
-        // building.position.y = 0.005
-        building.position.y = -0.255
-        building.position.z = -9
-        building.scale.set(0.22, 0.22, 0.22)
+        building.position.y = 0.005
+        building.scale.set(0.2, 0.2, 0.2)
         scene.add(building)
     },
     (xhr) => {
-        console.log(xhr)
+        // console.log(xhr)
     },
     (err) => {
-        console.log(err)
+        // console.log(err)
     }
 )
 
@@ -111,29 +107,46 @@ loader2.load('/character/starting1.gltf',
 window.addEventListener('keypress', (e) => {
     if (e.key === 'w' || e.key === 'W') {
         let w = s.position
+        action.stop()
+        walking.play()
         character.position.set(w.x, w.y, w.z)
+        // character.position.lerp(new THREE.Vector3(w.x, w.y, w.z),lerpDelta)
     }
     if (e.key === 'a' || e.key === 'A') {
-        pivot.rotation.y += 0.05;
+        pivot.rotation.y += 0.15
     }
     if (e.key === 'd' || e.key === 'D') {
-        pivot.rotation.y -= 0.05;
+        pivot.rotation.y -= 0.15
     }
     if (e.key === 's' || e.key === 'S') {
         // pivot.position.z += 0.05
     }
+    if (e.key === 'O' || e.key === 'o') {
+        s.position.y += 0.05
+        pivot.position.y += 0.05
+        character.position.y += 0.05
+    }
 })
 
+
+window.addEventListener("keyup", (e)=>{
+    if (e.key === "W" || e.key === 'w') {
+        walking.stop()
+        action.start()
+    }
+})
 
 const s = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 16), new THREE.MeshBasicMaterial({ color: 'green' }));
 scene.add(s);
 s.visible = false
 
+let lerpDelta = 0.01
+
 let r2
 function createLine(x1, y1, x2, y2) {
     let d = Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2))
-    let ext = 0.000000000001
-    let extD = (d + ext) / 5
+    let ext = 0.000000000000000000000000000000000000000001
+    let extD = (d + ext) / 20
     let x3 = x2 + ((x2 - x1) / d) * extD
     let y3 = y2 + ((y2 - y1) / d) * extD
     return [x3, y3]
@@ -142,104 +155,30 @@ function createLine(x1, y1, x2, y2) {
 let charPos = new THREE.Vector3()
 let target
 
-
 function animate() {
     requestAnimationFrame(animate)
     if (character !== undefined) {
         character.rotation.y = Math.PI
         pivot.position.set(character.position.x, character.position.y, character.position.z)
+        // pivot.position.lerp(new THREE.Vector3(character.position.x, character.position.y, character.position.z),lerpDelta)
         charPos.copy(c.position)
         charPos.applyMatrix4(c.matrixWorld)
-        let pp = createLine(charPos.x, charPos.z, character.position.x, character.position.z)
-        s.position.set(pp[0], 0, pp[1])
-        character.lookAt(pp[0], 0, pp[1])
-        // character.rotation.y+=1.6
-        camera2.lookAt(pp[0], 0.5, pp[1])
         camera2.position.set(charPos.x, charPos.y, charPos.z)
+        // camera2.position.lerp(new THREE.Vector3(charPos.x, charPos.y, charPos.z),lerpDelta)
+        let pp = createLine(charPos.x, charPos.z, character.position.x, character.position.z)
 
-        //helper
-        // helper.copy(c.geometry.boundingBox).applyMatrix4(character.matrixWorld)
-        helper.setFromObject(character);
-        detectCollision()
+        character.lookAt(pp[0], 0, pp[1])
+        camera2.lookAt(pp[0], 0.5, pp[1])
+        s.position.set(pp[0], 0, pp[1])
+        // s.position.lerp(new THREE.Vector3(pp[0], 0, pp[1]),lerpDelta)
+
+
+        var delta = clock.getDelta();
+        if (mixer) mixer.update(delta);
     }
     renderer.render(scene, camera2)
 }
 animate()
-
-
-let viewers = []
-let viewersBB = []
-// viewer stand
-let viewer = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.MeshBasicMaterial({ color: 'red' }));
-scene.add(viewer);
-viewer.position.set(1, 0, 1)
-let viewerBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-viewerBB.setFromObject(viewer);
-viewers.push(viewer)
-viewersBB.push(viewerBB)
-
-let viewer2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.MeshBasicMaterial({ color: 'red' }));
-scene.add(viewer2);
-viewer2.position.set(-1, 0, -1)
-let viewer2BB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-viewer2BB.setFromObject(viewer2);
-viewers.push(viewer2)
-viewersBB.push(viewer2BB)
-
-
-// ADDING VIVWER ON COLID FUNCTION
-let aViwer = false
-let rViwer = false
-
-function addViwer(img) {
-    if (localStorage.getItem("viwerState") === "false") {
-        let a = document.querySelector("#viewerAsk")
-        if (document.querySelector('.pnlm-render-container')) {
-            document.querySelector('.pnlm-render-container').remove()
-        }
-        document.querySelector("#contain").appendChild(a)
-
-        pannellum.viewer('panorama', {
-            "type": "equirectangular",
-            "panorama": "./views/"+img,
-            "autoLoad": true,
-            "autoRotate": -8
-        });
-        let tmp = document.querySelectorAll(".pnlm-about-msg")
-        console.log(tmp);
-
-        tmp.forEach(element => {
-            element.remove()
-        });
-
-        localStorage.setItem("viwerState", "true")
-        a.style.display = "flex"
-        a.style.height = "min-content"
-    }
-}
-
-function removeViwer() {
-    if (localStorage.getItem("viwerState") === "true") {
-        let a = document.querySelector("#viewerAsk")
-
-        a.style.display = "none"
-        a.style.height = "min-content"
-        localStorage.setItem("viwerState", false)
-        console.log("remove");
-    }
-
-}
-
-
-function detectCollision() {
-    if (helper.intersectsBox(viewersBB[0])) {
-        addViwer("PANO_20230224_142911.jpg")
-    }
-    else {
-        removeViwer()
-    }
-
-}
 
 document.body.onload = function () {
     async function getData() {
