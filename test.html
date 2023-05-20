@@ -31,7 +31,6 @@
         let charPos = new THREE.Vector3()
         let target
         let c
-        let camera2
         var clock = new THREE.Clock();
 
         // cannon.js variables
@@ -39,6 +38,17 @@
         let body, bbody
         let charBody
         let cannonDebugger
+
+
+        const keys = {};
+        const rotationSpeed = 0.5;
+        // Define camera offset values
+        let cameraOffset
+        let cameraVerticalOffset = 2;
+
+        // Create the camera
+        let camera2
+
 
         initThree()
         initCannon()
@@ -64,10 +74,19 @@
 
             window.addEventListener('resize', onWindowResize)
 
+
+            // Define camera offset values
+            cameraOffset = new THREE.Vector3(0, 0, -1); // Adjust the offset values according to your preference
+            cameraVerticalOffset = 0.8;
+
+            // Create the camera
+            camera2 = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            scene.add(camera2);
+
             const loader = new GLTFLoader();
             let childs = []
             let childGeometry = []
-            loader.load('/character/rigidTest1.gltf', (gltf) => {
+            loader.load('/character/starting2.gltf', (gltf) => {
                 mesh = gltf.scene;
                 let glTFGeometry
                 mesh.traverse(function (child) {
@@ -127,29 +146,50 @@
 
 
             //controller
-            window.addEventListener('keypress', (e) => {
-                if (e.key === 'w' || e.key === 'W') {
-                    let w = s.position
-                    action.stop()
-                    walking.play()
-                    character.position.set(w.x, w.y, w.z)
-                    // character.position.lerp(new THREE.Vector3(w.x, w.y, w.z),lerpDelta)
-                }
-                if (e.key === 'a' || e.key === 'A') {
-                    pivot.rotation.y += 0.15
-                }
-                if (e.key === 'd' || e.key === 'D') {
-                    pivot.rotation.y -= 0.15
-                }
-                if (e.key === 's' || e.key === 'S') {
-                    // pivot.position.z += 0.05
-                }
-                if (e.key === 'O' || e.key === 'o') {
-                    s.position.y += 0.05
-                    pivot.position.y += 0.05
-                    character.position.y += 0.05
-                }
-            })
+
+            // Event listeners to track key state
+            document.addEventListener('keydown', (event) => {
+                keys[event.code] = true;
+            });
+
+            document.addEventListener('keyup', (event) => {
+                keys[event.code] = false;
+
+                // Reset velocity when keys are released
+                charBody.velocity.set(0, 0, 0);
+            });
+
+
+        }
+        function handlePlayerControls() {
+            const rotationSpeed = 0.5; // Adjust the rotation speed according to your preference
+            const movementSpeed = 0.3; // Adjust the movement speed according to your preference
+
+            // Rotation
+            // if (keys['KeyA'] || keys['KeyA']) {
+            if (keys['KeyA']) {
+                charBody.angularVelocity.y = rotationSpeed;
+            }
+            if (keys['KeyD']) {
+                charBody.angularVelocity.y = -rotationSpeed;
+            }
+            // }
+            if (!keys['KeyA'] && !keys['KeyD']) {
+                charBody.angularVelocity.set(0, 0, 0);
+            }
+
+            // Movement in the direction of looking
+            const forward = new CANNON.Vec3(0, 0, -1); // Initial forward direction
+            const direction = new CANNON.Vec3();
+            charBody.quaternion.vmult(forward, direction); // Rotate the forward direction based on player's rotation
+
+            if (keys['KeyW']) {
+                charBody.velocity.copy(direction.scale(-movementSpeed));
+            } else if (keys['KeyS']) {
+                charBody.velocity.copy(direction.scale(movementSpeed));
+            } else {
+                charBody.velocity.set(0, 0, 0);
+            }
         }
 
         function onWindowResize() {
@@ -178,6 +218,24 @@
             return [x3, y3]
         }
 
+        // Update camera position and look-at target based on player's position and rotation
+        function updateCamera() {
+            const playerPosition = character.position;
+
+            // Calculate the camera position relative to the player
+            const relativeCameraOffset = cameraOffset.clone().applyQuaternion(character.quaternion);
+            const cameraPosition = playerPosition.clone().add(relativeCameraOffset);
+
+            // Adjust camera position vertically
+            cameraPosition.y += cameraVerticalOffset;
+
+            // Set the camera position and look-at target
+            camera2.position.copy(cameraPosition);
+            // camera2.lookAt(playerPosition);
+
+            camera2.lookAt(new THREE.Vector3(playerPosition.x,playerPosition.y+0.4,playerPosition.z));
+        }
+
         function animate() {
             requestAnimationFrame(animate)
 
@@ -185,28 +243,38 @@
             world.fixedStep()
 
             // Copy coordinates from cannon.js to three.js
-
+            handlePlayerControls()
             cannonDebugger.update()
 
-            if (character !== undefined) {
-                character.rotation.y = Math.PI
-                pivot.position.set(character.position.x, character.position.y, character.position.z)
-                // pivot.position.lerp(new THREE.Vector3(character.position.x, character.position.y, character.position.z),lerpDelta)
-                charPos.copy(c.position)
-                charPos.applyMatrix4(c.matrixWorld)
-                camera2.position.set(charPos.x, charPos.y, charPos.z)
-                // camera2.position.lerp(new THREE.Vector3(charPos.x, charPos.y, charPos.z),lerpDelta)
-                let pp = createLine(charPos.x, charPos.z, character.position.x, character.position.z)
+            // Update camera
+            updateCamera();
+            // if (character !== undefined) {
+            //     character.rotation.y = Math.PI
+            //     pivot.position.set(character.position.x, character.position.y, character.position.z)
+            //     // pivot.position.lerp(new THREE.Vector3(character.position.x, character.position.y, character.position.z),lerpDelta)
+            //     charPos.copy(c.position)
+            //     charPos.applyMatrix4(c.matrixWorld)
+            //     camera2.position.set(charPos.x, charPos.y, charPos.z)
+            //     // camera2.position.lerp(new THREE.Vector3(charPos.x, charPos.y, charPos.z),lerpDelta)
+            //     let pp = createLine(charPos.x, charPos.z, character.position.x, character.position.z)
 
-                character.lookAt(pp[0], 0, pp[1])
-                camera2.lookAt(pp[0], 0.5, pp[1])
-                s.position.set(pp[0], 0, pp[1])
-                // s.position.lerp(new THREE.Vector3(pp[0], 0, pp[1]),lerpDelta)
+            //     character.lookAt(pp[0], 0, pp[1])
+            //     camera2.lookAt(pp[0], 0.5, pp[1])
+            //     s.position.set(pp[0], 0, pp[1])
+            //     // s.position.lerp(new THREE.Vector3(pp[0], 0, pp[1]),lerpDelta)
 
 
-                var delta = clock.getDelta();
-                if (mixer) mixer.update(delta);
-            }
+            //     var delta = clock.getDelta();
+            //     if (mixer) mixer.update(delta);
+            // }
+
+            // Update the physics world
+            world.step(1 / 60);
+
+            // Update the character's position in the three.js world
+            character.position.copy(charBody.position);
+            character.quaternion.copy(charBody.quaternion);
+
 
             // Render three.js
             renderer.render(scene, camera)
@@ -252,7 +320,7 @@
         function addCharacterBody() {
             charBody = new CANNON.Body({
                 mass: 1, // Set mass to 0 to make it static
-                shape: new CANNON.Cylinder(0.1,0.1,0.4,6),
+                shape: new CANNON.Cylinder(0.2, 0.2, 0.05, 6),
             });
             // Add the rigid body to the world
             world.addBody(charBody);

@@ -39,33 +39,33 @@ async function fetchBlogs() {
 async function addBlogs() {
   let blogs = await fetchBlogs()
   let blogParent = document.querySelector('#blogs')
-
   blogs.map(b => {
-    blogParent.innerHTML = blogParent.innerHTML + `
-    <div id = "blogInd" key = "${b.id}" >
-      <div id="titleTxt">${b.title}</div>
-      <div id="blogText">${b.blog}</div>
-    </div>
-      `
+    if (blogParent.querySelector(`[key="${b.id}"]`) === null) {
+
+      blogParent.innerHTML = blogParent.innerHTML + `
+      <div id = "blogInd" key = "${b.id}" >
+        <div id="titleTxt">${b.title}</div>
+        <div id="blogText">${b.blog}</div>
+      </div>
+        `
+    }
     adminRights(b)
   })
-  
 }
 
-function adminRights(b) {
-  let blogs = document.querySelectorAll('#blogInd')
+async function adminRights(c) {
+  let b = await c
+  let blog = document.querySelector(`[key="${b.id}"]`)
   if (login === "true") {
-    blogs.forEach(blog => {
+    if (blog.querySelectorAll(`[keyid="${b.id}"]`).length === 0) {
       blog.innerHTML = blog.innerHTML + `
-        <div>
-        <input type="button" value="Delete" onclick="deleteBlog(${b.id})" key="${b.id}"/>
-        <input type="button" value="Update" onclick="updateBlog(${b.id})"
-        
-        
-        awad/>
-        </div>
-          `
-    })
+            <div keyid="${b.id}">
+            <input type="button" value="Delete" id="duBtn" onclick="deleteBlog(${b.id})" key="${b.id}"/>
+            <input type="button" value="Update" id="duBtn" onclick="updateBlog(${b.id})" key="${b.id}"/>
+            </div>
+              `
+    }
+
   }
 }
 

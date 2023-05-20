@@ -14,7 +14,7 @@
 <body>
   <div id="navv">
     <nav class="navbar">
-      <div><span class="logo">TFGP</span></div>
+      <div onclick="window.location = '/index.html'"><span class="logo">TFGP</span></div>
       <div class="nav">
         <a href="/index.html#aboutus">About Us</a>
         <a href="/blog.html">Blogs</a>
@@ -45,11 +45,15 @@
     </div>
   </div>
   <script>
-    window.editor = n
+    window.editor = null
+    window.submit = true
 
     ClassicEditor
       .create(document.querySelector('#editor'), {
         removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed']
+      })
+      .then(editor => {
+        window.editor = editor
       })
       .catch(error => {
         console.error(error);
@@ -82,18 +86,39 @@
 
     async function updateBlog(bid) {
       let idd = document.querySelector(`[key="${bid}"]`)
-      console.log(idd)
       let title = document.querySelector('#titleTxtt')
       let text = document.getElementsByClassName("ck-editor__editable")[0]
-    
-      let res = await fetch("http://localhost:3001/blog/"+bid)
+
+      let res = await fetch("http://localhost:3001/blog/" + bid)
       let blog = await res.json()
       blog = blog[0]
 
-      console.log(text);
       title.value = blog.title
-      text.innerHTML = blog.blog
-      console.log(new ClassicEditor);
+      window.editor.data.set(blog.blog)
+
+      let buttons = document.querySelector("#sub")
+      buttons.innerHTML = buttons.innerHTML + `<button type="submit" id="cancel" onclick="window.location.reload()"><span>Cancel</span></button>`
+      window.submit = false
+      if (window.submit == false) {
+        document.querySelector("#submit").addEventListener("click", function () {
+          window.submit = true
+          fetch("http://localhost:3001/blogUp", {
+            method: "post",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              id:bid,
+              title: title.value,
+              blog: text.innerHTML.toString()
+            })
+          })
+          .then(function (r) {
+            window.location.reload()
+          })
+        });
+      }
     }
 
   </script>

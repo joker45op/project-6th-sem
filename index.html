@@ -13,7 +13,7 @@
 
 <body>
   <nav class="navbar">
-    <div><span class="logo">TFGP</span></div>
+    <div onclick="window.location = '/index.html'"><span class="logo">TFGP</span></div>
     <div class="nav">
       <a href="/index.html#aboutus">About Us</a>
       <a href="/blog.html">Blogs</a>
@@ -98,13 +98,15 @@
           document.querySelector('.nav').innerHTML = `<a href="#aboutus">About Us</a>
           <a href="/blog.html">Blogs</a>
           <a href="#">Contact Us</a>
-          <a href="/adminLogin.html">Login</a>`
+          <a href="/adminLogin.html" id="log">Login</a>`
           alert()
           e1.style.display = "flex"
           e2.style.display = "flex"
           state = false
+          logOut()
         }
       }
+      
     }
 
     async function getLogin() {

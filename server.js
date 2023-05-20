@@ -94,6 +94,18 @@ app.get('/blog/:id', (req, res) => {
     })
 })
 
+app.post('/blogUp', (req, res) => {
+    con.query("update blogs set title ='"+req.body.title+"', blog='"+req.body.blog+"' where id="+req.body.id, (err, result) => {
+        if (err) {
+            res.status(500).send()
+            throw err
+        }
+        else {
+            res.status(200).send()
+        }
+    })
+})
+
 app.post('/deleteBlog', (req, res) =>{
     con.query("delete from blogs where id="+req.body.id, (err, result) => {
         if (err) {

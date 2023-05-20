@@ -173,3 +173,24 @@ body {
     position: relative;
     /* top: 130px; */
 }
+#cancel{
+    position: absolute;
+    background-color: white;
+    font-weight: 900;
+    font-size: 1rem;
+    padding: 5px 7px;
+    border: 2px solid #555;
+    right: 150px;
+}
+
+#duBtn{
+    padding: 5px 7px;
+    background-color: white;
+    color: #212121;
+    font-weight: 700;
+}
+
+#duBtn:hover{
+    background-color: rgb(140, 140, 140);
+    color: #000000;
+}

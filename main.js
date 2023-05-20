@@ -68,7 +68,7 @@ loader.load('/character/test2.gltf',
     (obj) => {
         character = obj.scene
         character.position.y = 0.005
-        character.scale.set(0.1, 0.1, 0.1)
+        character.scale.set(0.1, 0.09, 0.1)
         console.log(obj.animations);
         mixer = new THREE.AnimationMixer(obj.scene);
         action = mixer.clipAction(obj.animations[0]);
@@ -88,7 +88,7 @@ scene.updateMatrixWorld(true)
 // building
 let building
 const loader2 = new GLTFLoader()
-loader2.load('/character/starting344.gltf',
+loader2.load('/character/starting2.gltf',
     (obj) => {
         building = obj.scene
         building.position.y = 0.005
@@ -132,7 +132,7 @@ window.addEventListener('keypress', (e) => {
 window.addEventListener("keyup", (e)=>{
     if (e.key === "W" || e.key === 'w') {
         walking.stop()
-        action.start()
+        action.play()
     }
 })
 
